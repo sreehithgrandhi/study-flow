@@ -1,0 +1,7 @@
+{
+  "name": "StudyFlow",
+  "description": "Database-driven academic study planning and course tracking application with Supabase.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
