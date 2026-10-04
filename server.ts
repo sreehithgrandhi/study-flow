@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
@@ -7,6 +8,9 @@ import { GoogleGenAI } from "@google/genai";
 dotenv.config({ path: '.env.local' });
 
 const app = express();
+app.use(cors({
+  origin: "https://study-flow-iota-eight.vercel.app",
+}));
 const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json());
@@ -171,7 +175,7 @@ app.post("/api/ai/generate-study-plan", async (req, res) => {
       // 2. Lowest progress topics
       // 3. Difficulty (hard > medium > easy)
       const examSubjectIds = new Set(exams.map((e: any) => e.subject_id || e.subjects?.id));
-      
+
       const scoredTopics = [...topics].map((topic) => {
         let score = (100 - (topic.progress || 0)); // lower progress = higher score
         if (examSubjectIds.has(topic.subject_id || topic.subjects?.id)) {
@@ -194,7 +198,7 @@ app.post("/api/ai/generate-study-plan", async (req, res) => {
 
         const duration = Math.min(remainingMins, Math.max(25, item.topic.estimated_minutes > 45 ? 45 : 30));
         const hasExam = examSubjectIds.has(item.topic.subject_id || item.topic.subjects?.id);
-        
+
         selectedTasks.push({
           topic_id: item.topic.id,
           topic_name: item.topic.name,
@@ -230,35 +234,35 @@ Focus preference: ${focusGoal}
 
 Available Student Topics:
 ${JSON.stringify(
-  topics.map((t) => ({
-    id: t.id,
-    name: t.name,
-    subject_id: t.subject_id || t.subjects?.id,
-    subject_name: t.subjects?.name || t.subject_name || "Course",
-    difficulty: t.difficulty,
-    progress: t.progress,
-    estimated_minutes: t.estimated_minutes,
-  })),
-  null,
-  2
-)}
+      topics.map((t) => ({
+        id: t.id,
+        name: t.name,
+        subject_id: t.subject_id || t.subjects?.id,
+        subject_name: t.subjects?.name || t.subject_name || "Course",
+        difficulty: t.difficulty,
+        progress: t.progress,
+        estimated_minutes: t.estimated_minutes,
+      })),
+      null,
+      2
+    )}
 
 Upcoming Exams:
 ${JSON.stringify(
-  exams.map((e: any) => ({
-    id: e.id,
-    title: e.cleanTitle || e.title,
-    subject_ids: e.subject_ids || (e.subject_id ? [e.subject_id] : []),
-    subject_names:
-      e.all_subjects && e.all_subjects.length > 0
-        ? e.all_subjects.map((s: any) => s.name)
-        : [e.subjects?.name || e.subject_name || "Course"],
-    exam_date: e.exam_date,
-    priority: e.priority,
-  })),
-  null,
-  2
-)}
+      exams.map((e: any) => ({
+        id: e.id,
+        title: e.cleanTitle || e.title,
+        subject_ids: e.subject_ids || (e.subject_id ? [e.subject_id] : []),
+        subject_names:
+          e.all_subjects && e.all_subjects.length > 0
+            ? e.all_subjects.map((s: any) => s.name)
+            : [e.subjects?.name || e.subject_name || "Course"],
+        exam_date: e.exam_date,
+        priority: e.priority,
+      })),
+      null,
+      2
+    )}
 
 CRITICAL RULES:
 1. Select between 2 and 5 most critical topic IDs to study.

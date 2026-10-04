@@ -99,7 +99,7 @@ export const AIAssistantView: React.FC<AIAssistantViewProps> = ({
     };
 
     try {
-      const res = await fetch('/api/ai/assistant', {
+      const res = await fetch('https://study-flow-backend-gfyf.onrender.com/api/ai/assistant', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

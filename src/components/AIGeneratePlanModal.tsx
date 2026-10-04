@@ -67,7 +67,7 @@ export const AIGeneratePlanModal: React.FC<AIGeneratePlanModalProps> = ({
     setGeneratedPlan(null);
 
     try {
-      const res = await fetch('/api/ai/generate-study-plan', {
+      const res = await fetch('https://study-flow-backend-gfyf.onrender.com/api/ai/generate-study-plan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
